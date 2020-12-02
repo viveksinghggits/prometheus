@@ -1,22 +1,20 @@
-ARG ARCH="amd64"
-ARG OS="linux"
-FROM quay.io/prometheus/busybox-${OS}-${ARCH}:latest
+FROM registry.access.redhat.com/ubi8/ubi-minimal:8.1
 LABEL maintainer="The Prometheus Authors <prometheus-developers@googlegroups.com>"
 
-ARG ARCH="amd64"
-ARG OS="linux"
-COPY .build/${OS}-${ARCH}/prometheus        /bin/prometheus
-COPY .build/${OS}-${ARCH}/promtool          /bin/promtool
-COPY documentation/examples/prometheus.yml  /etc/prometheus/prometheus.yml
-COPY console_libraries/                     /usr/share/prometheus/console_libraries/
-COPY consoles/                              /usr/share/prometheus/consoles/
-COPY LICENSE                                /LICENSE
-COPY NOTICE                                 /NOTICE
-COPY npm_licenses.tar.bz2                   /npm_licenses.tar.bz2
+ARG PROM_VERSION
+RUN echo ${PROM_VERSION}
+COPY --from=prom/prometheus:v2.23.0 /bin/prometheus                             /bin/prometheus
+COPY --from=prom/prometheus:v2.23.0 /bin/promtool                               /bin/promtool
+COPY --from=prom/prometheus:v2.23.0 /etc/prometheus/prometheus.yml              /etc/prometheus/prometheus.yml
+COPY --from=prom/prometheus:v2.23.0 /usr/share/prometheus/console_libraries/    /usr/share/prometheus/console_libraries/
+COPY --from=prom/prometheus:v2.23.0 /usr/share/prometheus/consoles/             /usr/share/prometheus/consoles/
+COPY --from=prom/prometheus:v2.23.0 /LICENSE/                                   /licenses/
+COPY --from=prom/prometheus:v2.23.0 /NOTICE                                     /NOTICE
+COPY --from=prom/prometheus:v2.23.0 /npm_licenses.tar.bz2                       /npm_licenses.tar.bz2
 
 RUN ln -s /usr/share/prometheus/console_libraries /usr/share/prometheus/consoles/ /etc/prometheus/
 RUN mkdir -p /prometheus && \
-    chown -R nobody:nogroup etc/prometheus /prometheus
+    chown -R nobody etc/prometheus /prometheus
 
 USER       nobody
 EXPOSE     9090
