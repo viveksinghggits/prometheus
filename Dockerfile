@@ -1,15 +1,16 @@
+ARG PROM_IMAGE
+FROM ${PROM_IMAGE} as PROMETHEUS
+
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.1
 
-ARG PROM_VERSION
-RUN echo ${PROM_VERSION}
-COPY --from=prom/prometheus:v2.23.0 /bin/prometheus                             /bin/prometheus
-COPY --from=prom/prometheus:v2.23.0 /bin/promtool                               /bin/promtool
-COPY --from=prom/prometheus:v2.23.0 /etc/prometheus/prometheus.yml              /etc/prometheus/prometheus.yml
-COPY --from=prom/prometheus:v2.23.0 /usr/share/prometheus/console_libraries/    /usr/share/prometheus/console_libraries/
-COPY --from=prom/prometheus:v2.23.0 /usr/share/prometheus/consoles/             /usr/share/prometheus/consoles/
-COPY --from=prom/prometheus:v2.23.0 /LICENSE/                                   /licenses/
-COPY --from=prom/prometheus:v2.23.0 /NOTICE                                     /NOTICE
-COPY --from=prom/prometheus:v2.23.0 /npm_licenses.tar.bz2                       /npm_licenses.tar.bz2
+COPY --from=PROMETHEUS /bin/prometheus                             /bin/prometheus
+COPY --from=PROMETHEUS /bin/promtool                               /bin/promtool
+COPY --from=PROMETHEUS /etc/prometheus/prometheus.yml              /etc/prometheus/prometheus.yml
+COPY --from=PROMETHEUS /usr/share/prometheus/console_libraries/    /usr/share/prometheus/console_libraries/
+COPY --from=PROMETHEUS /usr/share/prometheus/consoles/             /usr/share/prometheus/consoles/
+COPY --from=PROMETHEUS /LICENSE/                                   /licenses/
+COPY --from=PROMETHEUS /NOTICE                                     /NOTICE
+COPY --from=PROMETHEUS /npm_licenses.tar.bz2                       /npm_licenses.tar.bz2
 
 RUN ln -s /usr/share/prometheus/console_libraries /usr/share/prometheus/consoles/ /etc/prometheus/
 RUN mkdir -p /prometheus && \

@@ -53,6 +53,12 @@ You can launch a Prometheus container for trying it out with
 
 Prometheus will now be reachable at http://localhost:9090/.
 
+#### Build image with RH UBI as base image
+
+```
+docker build --build-arg=PROM_IMAGE=prom/prometheus:v2.23.0 -t prometheus:<tag> .
+```
+
 ### Building from source
 
 To build Prometheus from source code, first ensure that have a working
