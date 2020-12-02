@@ -1,5 +1,4 @@
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.1
-LABEL maintainer="The Prometheus Authors <prometheus-developers@googlegroups.com>"
 
 ARG PROM_VERSION
 RUN echo ${PROM_VERSION}
@@ -20,6 +19,17 @@ USER       nobody
 EXPOSE     9090
 VOLUME     [ "/prometheus" ]
 WORKDIR    /prometheus
+
+LABEL maintainer="The Prometheus Authors <prometheus-developers@googlegroups.com>" \
+        name="prometheus" \
+        vendor="https://github.com/prometheus/prometheus" \
+        version="v2.23.0" \
+        release="v2.23.0" \
+        summary="Prometheus image with red hat UBI as base image" \
+        description="Prometheus image with red hat UBI as base image"
+
+
+
 ENTRYPOINT [ "/bin/prometheus" ]
 CMD        [ "--config.file=/etc/prometheus/prometheus.yml", \
              "--storage.tsdb.path=/prometheus", \
