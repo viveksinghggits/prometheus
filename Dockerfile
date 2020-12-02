@@ -29,8 +29,6 @@ LABEL maintainer="The Prometheus Authors <prometheus-developers@googlegroups.com
         summary="Prometheus image with red hat UBI as base image" \
         description="Prometheus image with red hat UBI as base image"
 
-
-
 ENTRYPOINT [ "/bin/prometheus" ]
 CMD        [ "--config.file=/etc/prometheus/prometheus.yml", \
              "--storage.tsdb.path=/prometheus", \
